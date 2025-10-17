@@ -9,8 +9,7 @@
 <style>
 :root{
   --bg:#0b1530; --ink:#fff; --outline:#ffffff26; --radius:26px;
-  --green:#22c55e; --yellow:#facc15; --red:#e53935;
-  --pink:#ff7eb9; --mint:#a6f7b2; --blue:#7dd3fc; --yell:#fff680;
+  --pink:#ff7eb9; --mint:#a6f7b2; --blue:#7dd3fc; --yell:#fff680; --vio:#c77dff; --green:#22c55e;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -39,49 +38,38 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 .en{
   font-weight:900;font-size:clamp(26px,7.4vw,48px);line-height:1.22;text-align:center;letter-spacing:.2px;
 }
-.en .karaoke span{padding:0 .04em;border-radius:.18em;transition:background .16s ease,color .16s ease,text-shadow .16s ease}
-.en .karaoke span.on{
-  background:linear-gradient(90deg,#24d781,#d8b600);
-  color:#06150d;
-  text-shadow:0 1px 0 rgba(255,255,255,.5);
-  box-shadow:0 0 0 3px rgba(36,215,129,.22);
+.en .word{
+  position:relative; display:inline-block; padding:0 .06em;
+  color:#ffffff; transition:color .15s ease, text-shadow .2s ease;
+}
+.en .word.filled{
+  background:linear-gradient(90deg,#22c55e,#facc15,#ff6ec7,#60a5fa,#c77dff,#22c55e);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 1px 0 rgba(255,255,255,.35);
 }
 .jp{font-weight:700;font-size:clamp(16px,3.8vw,22px);text-align:center;color:#d8e7ff;margin-top:10px}
 .hira{font-size:clamp(14px,3.4vw,18px);text-align:center;color:#bcd3ff;margin-top:6px}
 @media (max-width:520px){ .jp,.hira{max-width:92vw;margin-left:auto;margin-right:auto}}
 
-/* Listening bar (thin, synced with karaoke) */
-.listenBar{height:8px;border-radius:999px;border:1px solid var(--outline);margin:14px auto 0;max-width:860px;overflow:hidden}
-.listenFill{height:100%;width:0;background:linear-gradient(90deg,#24d781,#0fb46a,#079a59);
-  box-shadow:0 0 14px rgba(34,197,94,.7) inset,0 0 18px rgba(34,197,94,.4);}
-
-/* Big circular RING meter */
+/* Big reactive rainbow ring */
 .meterWrap{display:flex;align-items:center;justify-content:center;margin:22px 0}
-.meter{
-  position:relative;
-  width:min(64vw,280px);height:min(64vw,280px);
-  display:grid;place-items:center;
-}
+.meter{position:relative;width:min(64vw,290px);height:min(64vw,290px);display:grid;place-items:center}
 .ring{
-  width:100%;height:100%;
-  border-radius:50%;
-  /* Rainbow conic ring */
-  background:
-    conic-gradient(#22c55e, #facc15, #f43f5e, #a78bfa, #60a5fa, #22c55e);
-  /* Make it a ring using masking */
-  -webkit-mask:
-    radial-gradient(circle, transparent 56%, black 58%);
-  mask:
-    radial-gradient(circle, transparent 56%, black 58%);
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(#22c55e,#facc15,#f43f5e,#a78bfa,#60a5fa,#22c55e);
+  -webkit-mask:radial-gradient(circle, transparent 60%, black 62%);
+  mask:radial-gradient(circle, transparent 60%, black 62%);
   filter:drop-shadow(0 0 16px rgba(255,255,255,.25));
-  transition:transform .08s ease, filter .08s ease, opacity .2s ease;
-  opacity:0.9;
+  animation:rainbowCycle 3s linear infinite;
+}
+@keyframes rainbowCycle{
+  0%{filter:hue-rotate(0deg) drop-shadow(0 0 16px rgba(255,255,255,.25))}
+  100%{filter:hue-rotate(360deg) drop-shadow(0 0 16px rgba(255,255,255,.25))}
 }
 .meterCore{
-  position:absolute;inset:12% 12%;
-  border-radius:50%;
+  position:absolute;inset:12% 12%;border-radius:50%;
   background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.14), rgba(255,255,255,.04));
-  display:grid;place-items:center;
+  display:grid;place-items:center; text-align:center;
 }
 .meterText{
   font-weight:900;font-size:clamp(18px,6vw,28px);
@@ -91,8 +79,7 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 /* Buttons: JP main + EN below, unique glow colors */
 .btnRow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .btn{
-  display:inline-grid;place-items:center;line-height:1.15;text-align:center;
-  gap:4px;min-width:160px;
+  display:inline-grid;place-items:center;line-height:1.12;text-align:center;gap:4px;min-width:160px;
   border:none;border-radius:999px;padding:14px 20px;
   font-weight:900;font-size:clamp(18px,4vw,22px);
   color:#001e08;text-shadow:0 1px 0 rgba(255,255,255,.6);
@@ -154,31 +141,20 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
       <div id="en" class="en">「はじめる（Begin）」を押してスタート</div>
       <div id="jp" class="jp"></div>
       <div id="hira" class="hira"></div>
-
-      <!-- Thin listening timeline, synced to karaoke -->
-      <div class="listenBar"><div id="listenFill" class="listenFill"></div></div>
     </div>
 
-    <!-- Circular ring meter -->
+    <!-- Reactive rainbow ring -->
     <div class="meterWrap">
       <div id="meter" class="meter">
         <div id="ring" class="ring"></div>
-        <div class="meterCore">
-          <div id="meterText" class="meterText">リスニング中</div>
-        </div>
+        <div class="meterCore"><div id="meterText" class="meterText">リスニング中</div></div>
       </div>
     </div>
 
     <div class="btnRow">
-      <button id="beginBtn" class="btn begin">
-        はじめる<br><small>Begin</small>
-      </button>
-      <button id="retryBtn" class="btn retry" style="display:none">
-        もう一回<br><small>Retry</small>
-      </button>
-      <button id="nextBtn" class="btn next" style="display:none">
-        つぎへ<br><small>Next</small>
-      </button>
+      <button id="beginBtn" class="btn begin">はじめる<br><small>Begin</small></button>
+      <button id="retryBtn" class="btn retry" style="display:none">もう一回<br><small>Retry</small></button>
+      <button id="nextBtn" class="btn next" style="display:none">つぎへ<br><small>Next</small></button>
     </div>
 
     <div id="progress">０ / １５（０％）</div>
@@ -223,10 +199,9 @@ const A_100   = new Audio("assets/audio/100.mp3");
 [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{a.preload="auto";a.volume=1});
 
 /* ===== DOM ===== */
-const en  = document.getElementById('en');
-const jp  = document.getElementById('jp');
-const hira= document.getElementById('hira');
-const listenFill = document.getElementById('listenFill');
+const enEl  = document.getElementById('en');
+const jpEl  = document.getElementById('jp');
+const hiraEl= document.getElementById('hira');
 const beginBtn = document.getElementById('beginBtn');
 const retryBtn = document.getElementById('retryBtn');
 const nextBtn  = document.getElementById('nextBtn');
@@ -243,41 +218,54 @@ const SR = (window.SpeechRecognition || window.webkitSpeechRecognition)
   : null;
 if(!SR){ support.style.display='block'; }
 
-let idx=0, listening=false;
+let idx=0, listening=false, unlocked=false;
 let mediaStream=null, audioCtx=null, analyser=null, dataArray=null, rafId=null;
-let unlockedAudio=false;
 
 /* ===== Config ===== */
-const LISTEN_SECS = 6.0;
+const LISTEN_SECS = 3.0; // fixed ESL reading speed
 
 /* ===== Utils ===== */
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
 const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
 function strip(s){ return s.toLowerCase().replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim(); }
 function playAudioSafe(a){ try{ a.pause(); a.currentTime=0; const p=a.play(); if(p&&p.then)p.catch(()=>{});}catch(e){} }
-function toFullWidth(n){ return n.toString().replace(/\d/g, d=>"０１２３４５６７８９"[d]); }
+function toFW(n){ return n.toString().replace(/\d/g, d=>"０１２３４５６７８９"[d]); }
 
-/* ===== Karaoke ===== */
-let karaokeTimer=null;
-function startKaraoke(text){
-  const words = text.split(/\s+/).filter(Boolean);
-  en.innerHTML = `<span class="karaoke">${words.map(w=>`<span>${w}</span>`).join(' ')}</span>`;
-  const nodes = [...en.querySelectorAll('.karaoke span')];
-  if(nodes.length===0) return;
-  const step = (LISTEN_SECS*1000) / nodes.length;
-  let i=0;
-  function tick(){
-    if(i>0) nodes[i-1].classList.remove('on');
-    if(i<nodes.length){
-      nodes[i].classList.add('on');
-      i++; karaokeTimer=setTimeout(tick, step);
-    }else{ karaokeTimer=setTimeout(()=>nodes.forEach(n=>n.classList.remove('on')), 180); }
-  }
-  tick();
+/* ===== Rainbow reading sweep (fills words) ===== */
+let sweepRAF=null, wordsMeta=null;
+function mountRainbowWords(text){
+  const parts = text.split(/\s+/).filter(Boolean);
+  enEl.innerHTML = parts.map(w=>`<span class="word">${w}</span>`).join(' ');
+  const spans = [...enEl.querySelectorAll('.word')];
+  // cache centers relative to line
+  const rect = enEl.getBoundingClientRect();
+  wordsMeta = spans.map(sp=>{
+    const r = sp.getBoundingClientRect();
+    const cx = r.left + r.width/2 - rect.left;
+    return {el:sp, center:cx};
+  });
 }
-function stopKaraoke(original){
-  if(karaokeTimer){ clearTimeout(karaokeTimer); karaokeTimer=null; }
-  en.textContent = original;
+function startRainbowSweep(durationMs=3000){
+  if(!wordsMeta || wordsMeta.length===0) return;
+  const rect = enEl.getBoundingClientRect();
+  const total = rect.width || 1;
+  const start = performance.now();
+  cancelAnimationFrame(sweepRAF);
+  function step(t){
+    const elapsed = t - start;
+    const prog = clamp(elapsed/durationMs, 0, 1);
+    const x = total * prog; // sweep position
+    for(const w of wordsMeta){
+      if(w.center <= x){ w.el.classList.add('filled'); }
+      else{ w.el.classList.remove('filled'); }
+    }
+    if(elapsed < durationMs){ sweepRAF = requestAnimationFrame(step); }
+  }
+  sweepRAF = requestAnimationFrame(step);
+}
+function stopRainbowSweep(){
+  cancelAnimationFrame(sweepRAF);
+  sweepRAF=null;
 }
 
 /* ===== Keyword scoring ===== */
@@ -285,8 +273,7 @@ const STOP = new Set("a an the of to in on at for with from by is are am be was 
 function pickKeywords(sentence, max=5){
   const words = strip(sentence).split(' ').filter(w=>w && !STOP.has(w));
   words.sort((a,b)=>b.length-a.length);
-  const uniq=[];
-  for(const w of words){ if(!uniq.includes(w)) uniq.push(w); if(uniq.length>=max) break; }
+  const uniq=[]; for(const w of words){ if(!uniq.includes(w)) uniq.push(w); if(uniq.length>=max) break; }
   if(uniq.length<3){
     const all = strip(sentence).split(' ').filter(Boolean);
     for(const w of all){ if(!uniq.includes(w)){ uniq.push(w); if(uniq.length>=3) break; } }
@@ -301,13 +288,13 @@ function keywordScore(target, transcript){
   return {pct, keys, hit};
 }
 
-/* ===== Mic ring visual ===== */
-async function startMeter(){
-  // If mic not supported, run fallback animation
+/* ===== Reactive ring (mic) ===== */
+async function startRing(){
   try{
     mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
   }catch(e){
-    fallbackRingPulse();
+    // fallback soft breathing (already has hue animation)
+    ringBreathFallback();
     return;
   }
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -316,107 +303,87 @@ async function startMeter(){
   analyser.fftSize = 2048;
   dataArray = new Uint8Array(analyser.fftSize);
   src.connect(analyser);
-
+  let smooth=0;
   function tick(){
     analyser.getByteTimeDomainData(dataArray);
     let sum=0;
     for(let i=0;i<dataArray.length;i++){ const v=(dataArray[i]-128)/128; sum+=v*v; }
     const rms = Math.sqrt(sum/dataArray.length); // ~0..0.5
-    const level = clamp(rms*2.2, 0, 1);
-
-    // Animate ring: scale + glow intensity
-    ring.style.transform = `scale(${1 + level*0.12})`;
-    ring.style.filter    = `drop-shadow(0 0 ${10+level*28}px rgba(255,255,255,.32))`;
+    const level = clamp(rms*2.2,0,1);
+    // exponential smoothing for visible pulse
+    smooth = smooth*0.85 + level*0.15;
+    const scale = 1 + smooth*0.18;
+    ring.style.transform = `scale(${scale})`;
     rafId = requestAnimationFrame(tick);
   }
   tick();
 }
-function stopMeter(){
+function stopRing(){
   cancelAnimationFrame(rafId); rafId=null;
   if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
   if(audioCtx){ audioCtx.close(); audioCtx=null; }
   ring.style.transform='scale(1)';
-  ring.style.filter='drop-shadow(0 0 16px rgba(255,255,255,.25))';
 }
-let pulseTimer=null;
-function fallbackRingPulse(){
-  // Soft looping pulse when mic is unavailable
-  let t=0; clearInterval(pulseTimer);
-  pulseTimer=setInterval(()=>{
-    t=(t+1)%60;
-    const s=1+0.06*Math.sin(t/60*2*Math.PI);
+let breathTimer=null;
+function ringBreathFallback(){
+  clearInterval(breathTimer);
+  let t=0; breathTimer=setInterval(()=>{
+    t=(t+1)%80; const s=1+0.06*Math.sin(t/80*2*Math.PI);
     ring.style.transform=`scale(${s})`;
   }, 50);
 }
-function stopFallbackPulse(){ if(pulseTimer){ clearInterval(pulseTimer); pulseTimer=null; } }
-
-/* ===== Listening timeline ===== */
-function runListenBar(seconds){
-  listenFill.style.transition='none'; listenFill.style.width='0';
-  requestAnimationFrame(()=>{
-    listenFill.style.transition=`width ${seconds}s linear`;
-    listenFill.style.width='100%';
-  });
-}
+function stopBreath(){ if(breathTimer){ clearInterval(breathTimer); breathTimer=null; }}
 
 /* ===== Progress ===== */
 function updateProgress(){
   const n = Math.min(idx+1, ITEMS.length);
   const pct = Math.round((idx/ITEMS.length)*100);
-  progress.textContent = `${toFullWidth(n)} / ${toFullWidth(ITEMS.length)}（${toFullWidth(pct)}％）`;
+  progress.textContent = `${toFW(n)} / ${toFW(ITEMS.length)}（${toFW(pct)}％）`;
 }
 function showItem(){
-  const it=ITEMS[idx];
-  en.textContent = it.en; jp.textContent=it.jp; hira.textContent=it.hira||"";
+  const it = ITEMS[idx];
+  mountRainbowWords(it.en);
+  jpEl.textContent = it.jp;
+  hiraEl.textContent = it.hira || "";
   scoreBox.style.display='none'; scoreBox.className='scoreBox';
-  listenFill.style.width='0';
   meterText.textContent='リスニング中';
   updateProgress();
 }
 
-/* ===== Audio unlock on first tap ===== */
-function unlockAudios(){
-  if(unlockedAudio) return;
+/* ===== Audio unlock ===== */
+function unlock(){
+  if(unlocked) return;
   [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{ try{a.play().then(()=>a.pause()).catch(()=>{});}catch(e){} });
-  unlockedAudio=true;
+  unlocked=true;
 }
 
 /* ===== Speech flow ===== */
 let transcriptHeard="";
 async function beginRound(){
-  if(!SR){ fallbackRingPulse(); return; }
-  unlockAudios();
+  if(!SR){ ringBreathFallback(); return; }
+  unlock();
   listening=true;
   beginBtn.disabled=true;
   retryBtn.style.display='none';
   nextBtn.style.display='none';
   scoreBox.style.display='none';
 
-  // Start visuals
-  stopFallbackPulse();
-  await startMeter();
-  runListenBar(LISTEN_SECS);
-  startKaraoke(ITEMS[idx].en);
+  // Start reactive ring + rainbow sweep in sync (3s)
+  stopBreath();
+  await startRing();
+  startRainbowSweep(3000);
 
-  // SpeechRecognition
+  // Speech recognition
   transcriptHeard="";
-  SR.lang='en-US';
-  SR.continuous=true; SR.interimResults=true;
-  SR.onresult=(e)=>{
-    let txt=""; for(let i=e.resultIndex;i<e.results.length;i++){ txt+=e.results[i][0].transcript+" "; }
-    transcriptHeard=txt.trim();
-  };
-  SR.onerror=()=>{};
-  SR.onend=()=>{};
+  SR.lang='en-US'; SR.continuous=true; SR.interimResults=true;
+  SR.onresult=(e)=>{ let txt=""; for(let i=e.resultIndex;i<e.results.length;i++){ txt+=e.results[i][0].transcript+" "; } transcriptHeard=txt.trim(); };
+  SR.onerror=()=>{}; SR.onend=()=>{};
   try{ SR.start(); }catch(e){}
 
   await sleep(LISTEN_SECS*1000);
 
   try{ SR.stop(); }catch(e){}
-  stopMeter();
-  stopFallbackPulse();
-  listenFill.style.transition='none';
-  stopKaraoke(ITEMS[idx].en);
+  stopRing(); stopBreath(); stopRainbowSweep();
   listening=false;
 
   scoreCurrent();
@@ -424,66 +391,62 @@ async function beginRound(){
 
 function scoreCurrent(){
   const target=ITEMS[idx].en;
-  const {pct,keys,hit}=keywordScore(target, transcriptHeard);
+  const {pct}=keywordScore(target, transcriptHeard);
   renderScore(pct);
 }
 
-function renderScore(pct){
+function renderScore(score){
   const panel=document.querySelector('.panel');
-  const score = clamp(pct,0,100);
-  // Show % in the center of the ring AFTER speaking
-  meterText.textContent = `${score}%`;
+  const s = clamp(score,0,100);
+
+  // Show % inside ring after speaking
+  meterText.textContent = `${s}%`;
 
   // Score box JP message
-  let msg = `スコア：${score}％`;
-  if(score<=43) msg += "　｜　ブーーッ！もう一回！";
-  else if(score<=74) msg += "　｜　もう少し！";
-  else if(score<100) msg += "　｜　よくできました！";
+  let msg = `スコア：${s}％`;
+  if(s<=43) msg += "　｜　ブーーッ！もう一回！";
+  else if(s<=74) msg += "　｜　もう少し！";
+  else if(s<100) msg += "　｜　よくできました！";
   else msg += "　｜　パーフェクト！！";
 
-  scoreBox.textContent=msg;
+  scoreBox.textContent = msg;
   scoreBox.style.display='block';
-  scoreBox.className='scoreBox ' + (score>=95 ? 'good' : (score<50 ? 'bad' : 'mid'));
+  scoreBox.className='scoreBox ' + (s>=95 ? 'good' : (s<50 ? 'bad' : 'mid'));
 
-  // Play range audio
-  if(score===100) playAudioSafe(A_100);
-  else if(score>=75) playAudioSafe(A_75_99);
-  else if(score>=44) playAudioSafe(A_44_74);
+  // Range audio
+  if(s===100) playAudioSafe(A_100);
+  else if(s>=75) playAudioSafe(A_75_99);
+  else if(s>=44) playAudioSafe(A_44_74);
   else playAudioSafe(A_0_43);
 
   // FX
-  if(score===100){ confettiRain(260); }
-  else if(score>=75){ confettiRain(120); }
-  else if(score>=44){ puffs(panel, 22, 'rgba(255,255,255,0.92)'); }
-  else { puffs(panel, 28, 'rgba(106,77,43,0.95)'); }
+  if(s===100) confetti(240);
+  else if(s>=75) confetti(120);
+  else if(s>=44) puffs(panel, 22, 'rgba(255,255,255,0.92)');
+  else puffs(panel, 28, 'rgba(106,77,43,0.95)');
 
   // Buttons
   nextBtn.style.display='inline-block';
   beginBtn.disabled=false;
-  retryBtn.style.display = (score<75) ? 'inline-block' : 'none';
+  retryBtn.style.display = (s<75) ? 'inline-block' : 'none';
 }
 
 /* ===== Navigation ===== */
 function nextItem(){
   idx++;
   if(idx>=ITEMS.length){
-    en.textContent="Great work today!";
-    jp.textContent="よくがんばりました！";
-    hira.textContent="";
-    listenFill.style.width='0';
-    beginBtn.style.display='none';
-    retryBtn.style.display='none';
-    nextBtn.style.display='none';
-    scoreBox.style.display='block';
-    scoreBox.textContent="ぜんぶできました！おつかれさま！";
-    scoreBox.className='scoreBox good';
-    confettiRain(180);
+    enEl.innerHTML="Great work today!";
+    jpEl.textContent="よくがんばりました！";
+    hiraEl.textContent="";
+    beginBtn.style.display='none'; retryBtn.style.display='none'; nextBtn.style.display='none';
+    scoreBox.style.display='block'; scoreBox.textContent="ぜんぶできました！おつかれさま！"; scoreBox.className='scoreBox good';
+    confetti(180);
     return;
   }
   showItem();
 }
 
-/* ===== FX helpers ===== */
+/* ===== FX ===== */
 function puffs(el,count,color){
   const r=el.getBoundingClientRect(); const x=r.left+r.width/2, y=r.top+r.height/2+20;
   for(let k=0;k<count;k++){
@@ -496,29 +459,31 @@ function puffs(el,count,color){
     fx.appendChild(s); setTimeout(()=>s.remove(),1600);
   }
 }
-function confettiRain(count=120){
+function confetti(count=120){
   const colors=['#ff7eb9','#a6f7b2','#7dd3fc','#fff680','#c77dff','#8aff80'];
   for(let i=0;i<count;i++){
     const c=document.createElement('div'); c.className='confetti';
     c.style.background=colors[(Math.random()*colors.length)|0];
     c.style.left=Math.random()*100+'vw';
     c.style.animationDelay=(Math.random()*1.6)+'s';
-    c.style.width=(8+Math.random()*10)+'px';
-    c.style.height=c.style.width;
+    c.style.width=(8+Math.random()*10)+'px'; c.style.height=c.style.width;
     fx.appendChild(c); setTimeout(()=>c.remove(),3800);
   }
 }
 
 /* ===== Wire up ===== */
 beginBtn.addEventListener('click', async ()=>{
-  if(idx===0 && en.textContent.includes('はじめる')) showItem();
+  if(!unlocked){ [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{ try{a.play().then(()=>a.pause()).catch(()=>{});}catch(e){} }); unlocked=true; }
+  if(idx===0 && jpEl.textContent==="") showItem();
   await beginRound();
 });
 retryBtn.addEventListener('click', async ()=>{ await beginRound(); });
 nextBtn.addEventListener('click', ()=> nextItem());
 
 /* ===== Init ===== */
-showItem();
+function updateProgress(){ const n = Math.min(idx+1, ITEMS.length); const pct = Math.round((idx/ITEMS.length)*100);
+  progress.textContent = `${toFW(n)} / ${toFW(ITEMS.length)}（${toFW(pct)}％）`; }
+function showItem(){ const it = ITEMS[idx]; mountRainbowWords(it.en); jpEl.textContent = it.jp; hiraEl.textContent = it.hira || ""; scoreBox.style.display='none'; scoreBox.className='scoreBox'; meterText.textContent='リスニング中'; updateProgress(); }
 </script>
 </body>
 </html>
