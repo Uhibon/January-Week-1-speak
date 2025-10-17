@@ -27,13 +27,13 @@ header{text-align:center;padding:26px 12px 12px}
 footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:700;padding:40px 10px}
 
 /* Shell */
-.wrap{max-width:1100px;margin:0 auto;padding:8px 16px 80px}
+.wrap{max-width:1100px;margin:0 auto;padding:8px 16px 86px}
 .panel{padding:20px;border:1px solid var(--outline);border-radius:var(--radius);
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
   box-shadow:0 6px 24px rgba(0,0,0,.4);}
 
-/* Sentence card */
-.card{border:1px solid var(--outline);border-radius:var(--radius);padding:18px 16px;margin-bottom:16px;
+/* Sentence card (EN only) */
+.card{border:1px solid var(--outline);border-radius:var(--radius);padding:22px 16px;margin-bottom:10px;
   background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));}
 .en{
   font-weight:900;font-size:clamp(26px,7.4vw,48px);line-height:1.22;text-align:center;letter-spacing:.2px;
@@ -47,7 +47,13 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 1px 0 rgba(255,255,255,.35);
 }
-.jp{font-weight:700;font-size:clamp(16px,3.8vw,22px);text-align:center;color:#d8e7ff;margin-top:10px}
+
+/* Support bar (JP + ひらがな) – separate strip below the card */
+.supportBar{
+  margin:8px 0 14px; border:1px solid var(--outline); border-radius:14px; padding:12px 14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+}
+.jp{font-weight:700;font-size:clamp(16px,3.8vw,22px);text-align:center;color:#d8e7ff}
 .hira{font-size:clamp(14px,3.4vw,18px);text-align:center;color:#bcd3ff;margin-top:6px}
 @media (max-width:520px){ .jp,.hira{max-width:92vw;margin-left:auto;margin-right:auto}}
 
@@ -71,10 +77,7 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
   background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.14), rgba(255,255,255,.04));
   display:grid;place-items:center; text-align:center;
 }
-.meterText{
-  font-weight:900;font-size:clamp(18px,6vw,28px);
-  text-shadow:0 2px 0 rgba(0,0,0,.35);
-}
+.meterText{ font-weight:900;font-size:clamp(18px,6vw,28px); text-shadow:0 2px 0 rgba(0,0,0,.35) }
 
 /* Buttons: JP main + EN below, unique glow colors */
 .btnRow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
@@ -114,13 +117,11 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 .scoreBox.mid{box-shadow:0 0 28px rgba(96,165,250,.5) inset, 0 0 18px rgba(96,165,250,.35)}
 .scoreBox.bad{box-shadow:0 0 28px rgba(229,57,53,.5) inset, 0 0 18px rgba(229,57,53,.35)}
 
-/* Support */
+/* Support note */
 .support{max-width:800px;margin:12px auto 0;text-align:center;color:#ffcf7f}
 
 /* FX layer */
 .fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1000}
-.heart{position:absolute;color:#ff4fa6;font-size:clamp(46px,9vw,90px);text-shadow:0 4px 0 rgba(0,0,0,.35);animation:heartFly 1200ms ease-out forwards;}
-@keyframes heartFly{0%{opacity:0;transform:translate(-50%,-20px) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-240px) scale(1.5)}}
 .puff{position:absolute;border-radius:50%;filter:blur(0.5px);animation:puffUp 1500ms ease-out forwards}
 @keyframes puffUp{0%{opacity:0;transform:translate(-50%,-10px) scale(.6)}20%{opacity:.95}100%{opacity:0;transform:translate(-50%,-260px) scale(1.45)}}
 .confetti{position:absolute;width:12px;height:12px;top:-20px;animation:confettiFall 3.5s linear forwards}
@@ -137,13 +138,18 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 
 <div class="wrap">
   <div class="panel">
+    <!-- EN card -->
     <div class="card">
-      <div id="en" class="en">「はじめる（Begin）」を押してスタート</div>
+      <div id="en" class="en">Press はじめる to start</div>
+    </div>
+
+    <!-- JP support bar (separate) -->
+    <div class="supportBar">
       <div id="jp" class="jp"></div>
       <div id="hira" class="hira"></div>
     </div>
 
-    <!-- Reactive rainbow ring -->
+    <!-- Reactive ring -->
     <div class="meterWrap">
       <div id="meter" class="meter">
         <div id="ring" class="ring"></div>
@@ -151,6 +157,7 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
       </div>
     </div>
 
+    <!-- Buttons -->
     <div class="btnRow">
       <button id="beginBtn" class="btn begin">はじめる<br><small>Begin</small></button>
       <button id="retryBtn" class="btn retry" style="display:none">もう一回<br><small>Retry</small></button>
@@ -231,13 +238,13 @@ function strip(s){ return s.toLowerCase().replace(/[^a-z0-9' ]+/g,' ').replace(/
 function playAudioSafe(a){ try{ a.pause(); a.currentTime=0; const p=a.play(); if(p&&p.then)p.catch(()=>{});}catch(e){} }
 function toFW(n){ return n.toString().replace(/\d/g, d=>"０１２３４５６７８９"[d]); }
 
-/* ===== Rainbow reading sweep (fills words) ===== */
-let sweepRAF=null, wordsMeta=null;
+/* ===== Rainbow reading sweep (fills words; EN stays visible) ===== */
+let sweepRAF=null, wordsMeta=null, originalEN="";
 function mountRainbowWords(text){
+  originalEN = text;
   const parts = text.split(/\s+/).filter(Boolean);
   enEl.innerHTML = parts.map(w=>`<span class="word">${w}</span>`).join(' ');
   const spans = [...enEl.querySelectorAll('.word')];
-  // cache centers relative to line
   const rect = enEl.getBoundingClientRect();
   wordsMeta = spans.map(sp=>{
     const r = sp.getBoundingClientRect();
@@ -254,7 +261,7 @@ function startRainbowSweep(durationMs=3000){
   function step(t){
     const elapsed = t - start;
     const prog = clamp(elapsed/durationMs, 0, 1);
-    const x = total * prog; // sweep position
+    const x = total * prog;
     for(const w of wordsMeta){
       if(w.center <= x){ w.el.classList.add('filled'); }
       else{ w.el.classList.remove('filled'); }
@@ -263,10 +270,7 @@ function startRainbowSweep(durationMs=3000){
   }
   sweepRAF = requestAnimationFrame(step);
 }
-function stopRainbowSweep(){
-  cancelAnimationFrame(sweepRAF);
-  sweepRAF=null;
-}
+function stopRainbowSweep(){ cancelAnimationFrame(sweepRAF); sweepRAF=null; }
 
 /* ===== Keyword scoring ===== */
 const STOP = new Set("a an the of to in on at for with from by is are am be was were been being do does did doing and or but so that this those these it its i you he she we they them your my our their what which who where when why how".split(' '));
@@ -293,7 +297,6 @@ async function startRing(){
   try{
     mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
   }catch(e){
-    // fallback soft breathing (already has hue animation)
     ringBreathFallback();
     return;
   }
@@ -308,9 +311,8 @@ async function startRing(){
     analyser.getByteTimeDomainData(dataArray);
     let sum=0;
     for(let i=0;i<dataArray.length;i++){ const v=(dataArray[i]-128)/128; sum+=v*v; }
-    const rms = Math.sqrt(sum/dataArray.length); // ~0..0.5
+    const rms = Math.sqrt(sum/dataArray.length);
     const level = clamp(rms*2.2,0,1);
-    // exponential smoothing for visible pulse
     smooth = smooth*0.85 + level*0.15;
     const scale = 1 + smooth*0.18;
     ring.style.transform = `scale(${scale})`;
@@ -342,9 +344,9 @@ function updateProgress(){
 }
 function showItem(){
   const it = ITEMS[idx];
-  mountRainbowWords(it.en);
-  jpEl.textContent = it.jp;
-  hiraEl.textContent = it.hira || "";
+  mountRainbowWords(it.en);              // EN stays visible
+  jpEl.textContent = it.jp;              // JP in support bar
+  hiraEl.textContent = it.hira || "";    // hira in support bar
   scoreBox.style.display='none'; scoreBox.className='scoreBox';
   meterText.textContent='リスニング中';
   updateProgress();
@@ -368,7 +370,7 @@ async function beginRound(){
   nextBtn.style.display='none';
   scoreBox.style.display='none';
 
-  // Start reactive ring + rainbow sweep in sync (3s)
+  // Start reactive ring + rainbow sweep (3s)
   stopBreath();
   await startRing();
   startRainbowSweep(3000);
@@ -399,10 +401,10 @@ function renderScore(score){
   const panel=document.querySelector('.panel');
   const s = clamp(score,0,100);
 
-  // Show % inside ring after speaking
-  meterText.textContent = `${s}%`;
+  // Score in ring center
+  document.getElementById('meterText').textContent = `${s}%`;
 
-  // Score box JP message
+  // JP feedback
   let msg = `スコア：${s}％`;
   if(s<=43) msg += "　｜　ブーーッ！もう一回！";
   else if(s<=74) msg += "　｜　もう少し！";
@@ -474,16 +476,14 @@ function confetti(count=120){
 /* ===== Wire up ===== */
 beginBtn.addEventListener('click', async ()=>{
   if(!unlocked){ [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{ try{a.play().then(()=>a.pause()).catch(()=>{});}catch(e){} }); unlocked=true; }
-  if(idx===0 && jpEl.textContent==="") showItem();
+  if(idx===0 && jpEl.textContent===""){ showItem(); }
   await beginRound();
 });
 retryBtn.addEventListener('click', async ()=>{ await beginRound(); });
 nextBtn.addEventListener('click', ()=> nextItem());
 
 /* ===== Init ===== */
-function updateProgress(){ const n = Math.min(idx+1, ITEMS.length); const pct = Math.round((idx/ITEMS.length)*100);
-  progress.textContent = `${toFW(n)} / ${toFW(ITEMS.length)}（${toFW(pct)}％）`; }
-function showItem(){ const it = ITEMS[idx]; mountRainbowWords(it.en); jpEl.textContent = it.jp; hiraEl.textContent = it.hira || ""; scoreBox.style.display='none'; scoreBox.className='scoreBox'; meterText.textContent='リスニング中'; updateProgress(); }
+(function init(){ showItem(); })();
 </script>
 </body>
 </html>
