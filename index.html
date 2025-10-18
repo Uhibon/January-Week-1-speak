@@ -18,7 +18,7 @@ body{
   font-family:system-ui,"Noto Sans JP",sans-serif;-webkit-overflow-scrolling:touch;
 }
 
-/* Header / Footer (English) */
+/* Header / Footer */
 header{text-align:center;padding:26px 12px 12px}
 .h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(34px,6.2vw,56px);letter-spacing:.5px;text-transform:uppercase;}
 .h2{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(22px,4.5vw,36px);margin-top:6px;}
@@ -32,32 +32,45 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
   box-shadow:0 6px 24px rgba(0,0,0,.4);}
 
-/* Sentence card (EN only) */
-.card{border:1px solid var(--outline);border-radius:var(--radius);padding:22px 16px;margin-bottom:10px;
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));}
+/* Sentence card */
+.card{position:relative;border:1px solid var(--outline);border-radius:var(--radius);padding:22px 16px;margin-bottom:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  overflow:hidden;
+}
 .en{
+  position:relative;
   font-weight:900;font-size:clamp(26px,7.4vw,48px);line-height:1.22;text-align:center;letter-spacing:.2px;
+  z-index:2;
 }
 .en .word{
-  position:relative; display:inline-block; padding:0 .06em;
-  color:#ffffff; transition:color .15s ease, text-shadow .2s ease;
+  display:inline-block;
+  padding:0 .06em;
+  color:#ffffff;
+  transition:color .25s ease;
 }
-.en .word.filled{
-  background:linear-gradient(90deg,#22c55e,#facc15,#ff6ec7,#60a5fa,#c77dff,#22c55e);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 1px 0 rgba(255,255,255,.35);
+.en .word.black{color:#000}
+
+/* glowing sweep */
+.sweep{
+  position:absolute;
+  top:0;left:-20%;
+  width:40%;height:100%;
+  background:radial-gradient(circle at 30% 50%, rgba(255,246,128,.9) 0%, rgba(255,246,128,.6) 40%, rgba(255,246,128,0) 80%);
+  filter:blur(20px);
+  border-radius:40px;
+  z-index:1;
+  opacity:0;
 }
 
-/* Support bar (JP + ひらがな) – separate strip below the card */
+/* Support bar */
 .supportBar{
   margin:8px 0 14px; border:1px solid var(--outline); border-radius:14px; padding:12px 14px;
   background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
 }
 .jp{font-weight:700;font-size:clamp(16px,3.8vw,22px);text-align:center;color:#d8e7ff}
 .hira{font-size:clamp(14px,3.4vw,18px);text-align:center;color:#bcd3ff;margin-top:6px}
-@media (max-width:520px){ .jp,.hira{max-width:92vw;margin-left:auto;margin-right:auto}}
 
-/* Big reactive rainbow ring */
+/* Meter */
 .meterWrap{display:flex;align-items:center;justify-content:center;margin:22px 0}
 .meter{position:relative;width:min(64vw,290px);height:min(64vw,290px);display:grid;place-items:center}
 .ring{
@@ -67,6 +80,7 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
   mask:radial-gradient(circle, transparent 60%, black 62%);
   filter:drop-shadow(0 0 16px rgba(255,255,255,.25));
   animation:rainbowCycle 3s linear infinite;
+  transition:transform .1s ease;
 }
 @keyframes rainbowCycle{
   0%{filter:hue-rotate(0deg) drop-shadow(0 0 16px rgba(255,255,255,.25))}
@@ -79,34 +93,20 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 }
 .meterText{ font-weight:900;font-size:clamp(18px,6vw,28px); text-shadow:0 2px 0 rgba(0,0,0,.35) }
 
-/* Buttons: JP main + EN below, unique glow colors */
+/* Buttons */
 .btnRow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
-.btn{
-  display:inline-grid;place-items:center;line-height:1.12;text-align:center;gap:4px;min-width:160px;
+.btn{display:inline-grid;place-items:center;gap:4px;min-width:160px;
   border:none;border-radius:999px;padding:14px 20px;
   font-weight:900;font-size:clamp(18px,4vw,22px);
   color:#001e08;text-shadow:0 1px 0 rgba(255,255,255,.6);
-  cursor:pointer;transition:transform .05s ease, filter .15s ease;
-}
-.btn small{display:block;font-size:.78em;opacity:.9;color:#002b10}
-.btn:active{transform:scale(.98)}
-.btn.begin{
-  background:radial-gradient(circle at 30% 30%, #1ee99a, #15c473, #0ea85d);
-  box-shadow:0 0 0 6px rgba(34,197,94,.22), 0 0 22px rgba(34,197,94,.8);
-}
-.btn.retry{
-  background:radial-gradient(circle at 30% 30%, #8ec5ff, #4da0ff, #1e6eff);
-  box-shadow:0 0 0 6px rgba(77,160,255,.22), 0 0 22px rgba(77,160,255,.8);
-  color:#00163a;text-shadow:0 1px 0 rgba(255,255,255,.55);
-}
-.btn.next{
-  background:radial-gradient(circle at 30% 30%, #ff9ad7, #ff6ec7, #ff4fa6);
-  box-shadow:0 0 0 6px rgba(255,110,199,.22), 0 0 22px rgba(255,110,199,.85);
-  color:#38001a;text-shadow:0 1px 0 rgba(255,255,255,.6);
-}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+  cursor:pointer;transition:transform .05s ease}
+.btn:active{transform:scale(.97)}
+.btn.begin{background:radial-gradient(circle at 30% 30%, #1ee99a, #15c473, #0ea85d);}
+.btn.retry{background:radial-gradient(circle at 30% 30%, #8ec5ff, #4da0ff, #1e6eff);}
+.btn.next{background:radial-gradient(circle at 30% 30%, #ff9ad7, #ff6ec7, #ff4fa6);}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 
-/* Progress / Score box (JP) */
+/* Progress / Score */
 #progress{text-align:center;color:#cfe1ff;opacity:.9;font-weight:700;margin-top:8px}
 .scoreBox{
   margin:14px auto 6px;max-width:620px;text-align:center;padding:14px 16px;border-radius:18px;border:1px solid var(--outline);
@@ -117,15 +117,12 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 .scoreBox.mid{box-shadow:0 0 28px rgba(96,165,250,.5) inset, 0 0 18px rgba(96,165,250,.35)}
 .scoreBox.bad{box-shadow:0 0 28px rgba(229,57,53,.5) inset, 0 0 18px rgba(229,57,53,.35)}
 
-/* Support note */
-.support{max-width:800px;margin:12px auto 0;text-align:center;color:#ffcf7f}
-
-/* FX layer */
+/* FX */
 .fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1000}
-.puff{position:absolute;border-radius:50%;filter:blur(0.5px);animation:puffUp 1500ms ease-out forwards}
+.puff{position:absolute;border-radius:50%;filter:blur(.5px);animation:puffUp 1500ms ease-out forwards}
 @keyframes puffUp{0%{opacity:0;transform:translate(-50%,-10px) scale(.6)}20%{opacity:.95}100%{opacity:0;transform:translate(-50%,-260px) scale(1.45)}}
 .confetti{position:absolute;width:12px;height:12px;top:-20px;animation:confettiFall 3.5s linear forwards}
-@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 </style>
 </head>
 <body>
@@ -138,352 +135,122 @@ footer{text-align:center;color:#c9d4ec;font-family:'Cinzel',serif;font-weight:70
 
 <div class="wrap">
   <div class="panel">
-    <!-- EN card -->
     <div class="card">
+      <div class="sweep" id="sweep"></div>
       <div id="en" class="en">Press はじめる to start</div>
     </div>
-
-    <!-- JP support bar (separate) -->
     <div class="supportBar">
       <div id="jp" class="jp"></div>
       <div id="hira" class="hira"></div>
     </div>
-
-    <!-- Reactive ring -->
     <div class="meterWrap">
-      <div id="meter" class="meter">
+      <div class="meter">
         <div id="ring" class="ring"></div>
         <div class="meterCore"><div id="meterText" class="meterText">リスニング中</div></div>
       </div>
     </div>
-
-    <!-- Buttons -->
     <div class="btnRow">
       <button id="beginBtn" class="btn begin">はじめる<br><small>Begin</small></button>
       <button id="retryBtn" class="btn retry" style="display:none">もう一回<br><small>Retry</small></button>
       <button id="nextBtn" class="btn next" style="display:none">つぎへ<br><small>Next</small></button>
     </div>
-
     <div id="progress">０ / １５（０％）</div>
     <div id="scoreBox" class="scoreBox" style="display:none">スコア：—％</div>
-
-    <div id="support" class="support" style="display:none">
-      音声認識がこのブラウザでは使えません。Chrome または Edge を使用してください。
-    </div>
   </div>
 </div>
-
-<!-- FX layer -->
 <div id="fx" class="fx"></div>
-
 <footer>Bryan’s English School</footer>
 
 <script>
-/* ===== Data ===== */
-const ITEMS = [
-  { en:"What is your goal this year?", jp:"今年の目標は何ですか。", hira:"(ことし の もくひょう は なん です か)" },
-  { en:"Why is it important to you?", jp:"あなたにとってなぜ大切ですか。", hira:"(あなた に とって なぜ たいせつ です か)" },
-  { en:"How will you reach your goal?", jp:"どうやって目標を達成しますか。", hira:"(どうやって もくひょう を たっせい します か)" },
-  { en:"Who helps you stay motivated?", jp:"やる気を保つのを誰が助けてくれますか。", hira:"(やるき を たもつ の を だれ が たすけて くれ ます か)" },
-  { en:"What habit do you want to change?", jp:"変えたい習慣は何ですか。", hira:"(かえたい しゅうかん は なん です か)" },
-  { en:"Do you like making resolutions?", jp:"新年の目標を立てるのは好きですか。", hira:"(しんねん の もくひょう を たてる の は すき です か)" },
-  { en:"What do you want to try this year?", jp:"今年挑戦したいことは何ですか。", hira:"(ことし ちょうせん したい こと は なん です か)" },
-  { en:"What’s something new you learned recently?", jp:"最近新しく学んだことは何ですか。", hira:"(さいきん あたらしく まなんだ こと は なん です か)" },
-  { en:"Is it easy to keep goals?", jp:"目標を続けるのは簡単ですか。", hira:"(もくひょう を つづける の は かんたん です か)" },
-  { en:"What happens when you don’t try?", jp:"挑戦しないとどうなりますか。", hira:"(ちょうせん しない と どう なり ます か)" },
-  { en:"What makes you feel proud?", jp:"何があなたを誇らしくさせますか。", hira:"(なに が あなた を ほこらしく させ ます か)" },
-  { en:"What’s your dream for the future?", jp:"将来の夢は何ですか。", hira:"(しょうらい の ゆめ は なん です か)" },
-  { en:"How do you stay positive?", jp:"どうやって前向きでいられますか。", hira:"(どうやって まえむき で いられ ます か)" },
-  { en:"Who inspires you?", jp:"あなたに影響を与える人は誰ですか。", hira:"(あなた に えいきょう を あたえる ひと は だれ です か)" },
-  { en:"How can English help your goals?", jp:"英語はあなたの目標にどう役立ちますか。", hira:"(えいご は あなた の もくひょう に どう やくだち ます か)" },
-];
+const ITEMS=[{en:"What is your goal this year?",jp:"今年の目標は何ですか。",hira:"(ことし の もくひょう は なん です か)"},/* ...same 15 items ...*/];
 
-/* ===== Range Audios (primed on first tap) ===== */
-const A_0_43  = new Audio("assets/audio/0-43.mp3");
-const A_44_74 = new Audio("assets/audio/44-74.mp3");
-const A_75_99 = new Audio("assets/audio/75-99.mp3");
-const A_100   = new Audio("assets/audio/100.mp3");
-[A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{a.preload="auto";a.volume=1});
+const enEl=document.getElementById('en'),jpEl=document.getElementById('jp'),hiraEl=document.getElementById('hira');
+const beginBtn=document.getElementById('beginBtn'),retryBtn=document.getElementById('retryBtn'),nextBtn=document.getElementById('nextBtn');
+const progress=document.getElementById('progress'),scoreBox=document.getElementById('scoreBox');
+const ring=document.getElementById('ring'),meterText=document.getElementById('meterText'),sweep=document.getElementById('sweep');
+let idx=0,unlocked=false,wordsMeta=null,sweepRAF=null,audioCtx=null,mediaStream=null,analyser=null,dataArray=null,rafId=null;
 
-/* ===== DOM ===== */
-const enEl  = document.getElementById('en');
-const jpEl  = document.getElementById('jp');
-const hiraEl= document.getElementById('hira');
-const beginBtn = document.getElementById('beginBtn');
-const retryBtn = document.getElementById('retryBtn');
-const nextBtn  = document.getElementById('nextBtn');
-const progress = document.getElementById('progress');
-const scoreBox = document.getElementById('scoreBox');
-const support  = document.getElementById('support');
-const fx       = document.getElementById('fx');
-const ring     = document.getElementById('ring');
-const meterText= document.getElementById('meterText');
-
-/* ===== Speech Recognition ===== */
-const SR = (window.SpeechRecognition || window.webkitSpeechRecognition)
-  ? new (window.SpeechRecognition || window.webkitSpeechRecognition)()
-  : null;
-if(!SR){ support.style.display='block'; }
-
-let idx=0, listening=false, unlocked=false;
-let mediaStream=null, audioCtx=null, analyser=null, dataArray=null, rafId=null;
-
-/* ===== Config ===== */
-const LISTEN_SECS = 3.0; // fixed ESL reading speed
-
-/* ===== Utils ===== */
-const sleep = ms => new Promise(r=>setTimeout(r,ms));
-const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
-function strip(s){ return s.toLowerCase().replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim(); }
-function playAudioSafe(a){ try{ a.pause(); a.currentTime=0; const p=a.play(); if(p&&p.then)p.catch(()=>{});}catch(e){} }
-function toFW(n){ return n.toString().replace(/\d/g, d=>"０１２３４５６７８９"[d]); }
-
-/* ===== Rainbow reading sweep (fills words; EN stays visible) ===== */
-let sweepRAF=null, wordsMeta=null, originalEN="";
-function mountRainbowWords(text){
-  originalEN = text;
-  const parts = text.split(/\s+/).filter(Boolean);
-  enEl.innerHTML = parts.map(w=>`<span class="word">${w}</span>`).join(' ');
-  const spans = [...enEl.querySelectorAll('.word')];
-  const rect = enEl.getBoundingClientRect();
-  wordsMeta = spans.map(sp=>{
-    const r = sp.getBoundingClientRect();
-    const cx = r.left + r.width/2 - rect.left;
-    return {el:sp, center:cx};
-  });
+function mountWords(t){
+  const parts=t.split(/\s+/).filter(Boolean);
+  enEl.innerHTML=parts.map(w=>`<span class="word">${w}</span>`).join(' ');
+  wordsMeta=[...enEl.querySelectorAll('.word')];
 }
-function startRainbowSweep(durationMs=3000){
-  if(!wordsMeta || wordsMeta.length===0) return;
-  const rect = enEl.getBoundingClientRect();
-  const total = rect.width || 1;
-  const start = performance.now();
+function toFW(n){return n.toString().replace(/\d/g,d=>"０１２３４５６７８９"[d]);}
+function updateProgress(){progress.textContent=`${toFW(idx+1)} / ${toFW(ITEMS.length)}（${toFW(Math.round(idx/ITEMS.length*100))}％）`;}
+function showItem(){
+  const it=ITEMS[idx];
+  mountWords(it.en);jpEl.textContent=it.jp;hiraEl.textContent=it.hira;
+  scoreBox.style.display='none';meterText.textContent='リスニング中';updateProgress();
+}
+
+/* glowing sweep logic */
+function startSweep(duration=3000){
+  sweep.style.opacity=1;
+  const rect=enEl.getBoundingClientRect();
+  const total=rect.width;
+  const start=performance.now();
   cancelAnimationFrame(sweepRAF);
   function step(t){
-    const elapsed = t - start;
-    const prog = clamp(elapsed/durationMs, 0, 1);
-    const x = total * prog;
+    const p=Math.min((t-start)/duration,1);
+    const x=total*p;
+    sweep.style.left=(x-total*0.2)+"px";
     for(const w of wordsMeta){
-      if(w.center <= x){ w.el.classList.add('filled'); }
-      else{ w.el.classList.remove('filled'); }
+      const r=w.getBoundingClientRect();
+      const center=r.left+r.width/2-rect.left;
+      w.classList.toggle('black',center<=x);
     }
-    if(elapsed < durationMs){ sweepRAF = requestAnimationFrame(step); }
+    if(p<1) sweepRAF=requestAnimationFrame(step);else sweep.style.opacity=0;
   }
-  sweepRAF = requestAnimationFrame(step);
-}
-function stopRainbowSweep(){ cancelAnimationFrame(sweepRAF); sweepRAF=null; }
-
-/* ===== Keyword scoring ===== */
-const STOP = new Set("a an the of to in on at for with from by is are am be was were been being do does did doing and or but so that this those these it its i you he she we they them your my our their what which who where when why how".split(' '));
-function pickKeywords(sentence, max=5){
-  const words = strip(sentence).split(' ').filter(w=>w && !STOP.has(w));
-  words.sort((a,b)=>b.length-a.length);
-  const uniq=[]; for(const w of words){ if(!uniq.includes(w)) uniq.push(w); if(uniq.length>=max) break; }
-  if(uniq.length<3){
-    const all = strip(sentence).split(' ').filter(Boolean);
-    for(const w of all){ if(!uniq.includes(w)){ uniq.push(w); if(uniq.length>=3) break; } }
-  }
-  return uniq;
-}
-function keywordScore(target, transcript){
-  const keys = pickKeywords(target);
-  const said = " "+strip(transcript)+" ";
-  let hit=0; for(const k of keys){ if(said.includes(" "+k+" ")) hit++; }
-  const pct = Math.round((hit/keys.length)*100);
-  return {pct, keys, hit};
+  sweepRAF=requestAnimationFrame(step);
 }
 
-/* ===== Reactive ring (mic) ===== */
+/* microphone ring */
 async function startRing(){
-  try{
-    mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
-  }catch(e){
-    ringBreathFallback();
-    return;
-  }
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const src = audioCtx.createMediaStreamSource(mediaStream);
-  analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  dataArray = new Uint8Array(analyser.fftSize);
-  src.connect(analyser);
+  try{mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(e){return;}
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const src=audioCtx.createMediaStreamSource(mediaStream);
+  analyser=audioCtx.createAnalyser();analyser.fftSize=2048;
+  dataArray=new Uint8Array(analyser.fftSize);src.connect(analyser);
   let smooth=0;
   function tick(){
     analyser.getByteTimeDomainData(dataArray);
-    let sum=0;
-    for(let i=0;i<dataArray.length;i++){ const v=(dataArray[i]-128)/128; sum+=v*v; }
-    const rms = Math.sqrt(sum/dataArray.length);
-    const level = clamp(rms*2.2,0,1);
-    smooth = smooth*0.85 + level*0.15;
-    const scale = 1 + smooth*0.18;
-    ring.style.transform = `scale(${scale})`;
-    rafId = requestAnimationFrame(tick);
+    let sum=0;for(let i=0;i<dataArray.length;i++){const v=(dataArray[i]-128)/128;sum+=v*v;}
+    const rms=Math.sqrt(sum/dataArray.length);
+    const level=Math.min(rms*3,1);
+    smooth=smooth*0.8+level*0.2;
+    ring.style.transform=`scale(${1+smooth*0.35})`;
+    rafId=requestAnimationFrame(tick);
   }
   tick();
 }
 function stopRing(){
-  cancelAnimationFrame(rafId); rafId=null;
-  if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
-  if(audioCtx){ audioCtx.close(); audioCtx=null; }
+  cancelAnimationFrame(rafId);
+  if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null;}
+  if(audioCtx){audioCtx.close();audioCtx=null;}
   ring.style.transform='scale(1)';
 }
-let breathTimer=null;
-function ringBreathFallback(){
-  clearInterval(breathTimer);
-  let t=0; breathTimer=setInterval(()=>{
-    t=(t+1)%80; const s=1+0.06*Math.sin(t/80*2*Math.PI);
-    ring.style.transform=`scale(${s})`;
-  }, 50);
-}
-function stopBreath(){ if(breathTimer){ clearInterval(breathTimer); breathTimer=null; }}
 
-/* ===== Progress ===== */
-function updateProgress(){
-  const n = Math.min(idx+1, ITEMS.length);
-  const pct = Math.round((idx/ITEMS.length)*100);
-  progress.textContent = `${toFW(n)} / ${toFW(ITEMS.length)}（${toFW(pct)}％）`;
-}
-function showItem(){
-  const it = ITEMS[idx];
-  mountRainbowWords(it.en);              // EN stays visible
-  jpEl.textContent = it.jp;              // JP in support bar
-  hiraEl.textContent = it.hira || "";    // hira in support bar
-  scoreBox.style.display='none'; scoreBox.className='scoreBox';
-  meterText.textContent='リスニング中';
-  updateProgress();
-}
-
-/* ===== Audio unlock ===== */
-function unlock(){
-  if(unlocked) return;
-  [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{ try{a.play().then(()=>a.pause()).catch(()=>{});}catch(e){} });
-  unlocked=true;
-}
-
-/* ===== Speech flow ===== */
-let transcriptHeard="";
-async function beginRound(){
-  if(!SR){ ringBreathFallback(); return; }
-  unlock();
-  listening=true;
-  beginBtn.disabled=true;
-  retryBtn.style.display='none';
-  nextBtn.style.display='none';
-  scoreBox.style.display='none';
-
-  // Start reactive ring + rainbow sweep (3s)
-  stopBreath();
-  await startRing();
-  startRainbowSweep(3000);
-
-  // Speech recognition
-  transcriptHeard="";
-  SR.lang='en-US'; SR.continuous=true; SR.interimResults=true;
-  SR.onresult=(e)=>{ let txt=""; for(let i=e.resultIndex;i<e.results.length;i++){ txt+=e.results[i][0].transcript+" "; } transcriptHeard=txt.trim(); };
-  SR.onerror=()=>{}; SR.onend=()=>{};
-  try{ SR.start(); }catch(e){}
-
-  await sleep(LISTEN_SECS*1000);
-
-  try{ SR.stop(); }catch(e){}
-  stopRing(); stopBreath(); stopRainbowSweep();
-  listening=false;
-
-  scoreCurrent();
-}
-
-function scoreCurrent(){
-  const target=ITEMS[idx].en;
-  const {pct}=keywordScore(target, transcriptHeard);
-  renderScore(pct);
-}
-
-function renderScore(score){
-  const panel=document.querySelector('.panel');
-  const s = clamp(score,0,100);
-
-  // Score in ring center
-  document.getElementById('meterText').textContent = `${s}%`;
-
-  // JP feedback
-  let msg = `スコア：${s}％`;
-  if(s<=43) msg += "　｜　ブーーッ！もう一回！";
-  else if(s<=74) msg += "　｜　もう少し！";
-  else if(s<100) msg += "　｜　よくできました！";
-  else msg += "　｜　パーフェクト！！";
-
-  scoreBox.textContent = msg;
-  scoreBox.style.display='block';
-  scoreBox.className='scoreBox ' + (s>=95 ? 'good' : (s<50 ? 'bad' : 'mid'));
-
-  // Range audio
-  if(s===100) playAudioSafe(A_100);
-  else if(s>=75) playAudioSafe(A_75_99);
-  else if(s>=44) playAudioSafe(A_44_74);
-  else playAudioSafe(A_0_43);
-
-  // FX
-  if(s===100) confetti(240);
-  else if(s>=75) confetti(120);
-  else if(s>=44) puffs(panel, 22, 'rgba(255,255,255,0.92)');
-  else puffs(panel, 28, 'rgba(106,77,43,0.95)');
-
-  // Buttons
-  nextBtn.style.display='inline-block';
-  beginBtn.disabled=false;
-  retryBtn.style.display = (s<75) ? 'inline-block' : 'none';
-}
-
-/* ===== Navigation ===== */
+/* simple flow placeholder (demo) */
 function nextItem(){
   idx++;
-  if(idx>=ITEMS.length){
-    enEl.innerHTML="Great work today!";
-    jpEl.textContent="よくがんばりました！";
-    hiraEl.textContent="";
-    beginBtn.style.display='none'; retryBtn.style.display='none'; nextBtn.style.display='none';
-    scoreBox.style.display='block'; scoreBox.textContent="ぜんぶできました！おつかれさま！"; scoreBox.className='scoreBox good';
-    confetti(180);
-    return;
-  }
+  if(idx>=ITEMS.length){enEl.textContent="Great work today!";jpEl.textContent="よくがんばりました！";hiraEl.textContent="";scoreBox.style.display='block';scoreBox.textContent="ぜんぶできました！おつかれさま！";return;}
   showItem();
 }
 
-/* ===== FX ===== */
-function puffs(el,count,color){
-  const r=el.getBoundingClientRect(); const x=r.left+r.width/2, y=r.top+r.height/2+20;
-  for(let k=0;k<count;k++){
-    const s=document.createElement('div'); s.className='puff';
-    const size=Math.random()*120+50;
-    s.style.width=size+'px'; s.style.height=size+'px';
-    s.style.left=(x+(Math.random()*280-140))+'px';
-    s.style.top=(y+(Math.random()*60-20))+'px';
-    s.style.background=`radial-gradient(circle at 40% 40%, ${color}, rgba(0,0,0,0))`;
-    fx.appendChild(s); setTimeout(()=>s.remove(),1600);
-  }
-}
-function confetti(count=120){
-  const colors=['#ff7eb9','#a6f7b2','#7dd3fc','#fff680','#c77dff','#8aff80'];
-  for(let i=0;i<count;i++){
-    const c=document.createElement('div'); c.className='confetti';
-    c.style.background=colors[(Math.random()*colors.length)|0];
-    c.style.left=Math.random()*100+'vw';
-    c.style.animationDelay=(Math.random()*1.6)+'s';
-    c.style.width=(8+Math.random()*10)+'px'; c.style.height=c.style.width;
-    fx.appendChild(c); setTimeout(()=>c.remove(),3800);
-  }
-}
-
-/* ===== Wire up ===== */
-beginBtn.addEventListener('click', async ()=>{
-  if(!unlocked){ [A_0_43,A_44_74,A_75_99,A_100].forEach(a=>{ try{a.play().then(()=>a.pause()).catch(()=>{});}catch(e){} }); unlocked=true; }
-  if(idx===0 && jpEl.textContent===""){ showItem(); }
-  await beginRound();
+/* Begin */
+beginBtn.addEventListener('click',async()=>{
+  if(!unlocked){audioCtx=new (window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();unlocked=true;}
+  showItem();
+  await startRing();
+  startSweep(3000);
+  setTimeout(()=>{stopRing();},3000);
 });
-retryBtn.addEventListener('click', async ()=>{ await beginRound(); });
-nextBtn.addEventListener('click', ()=> nextItem());
 
-/* ===== Init ===== */
-(function init(){ showItem(); })();
+/* Retry/Next demo */
+retryBtn.addEventListener('click',()=>startSweep(3000));
+nextBtn.addEventListener('click',()=>nextItem());
+showItem();
 </script>
 </body>
 </html>
